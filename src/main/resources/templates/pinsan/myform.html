@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html >
+<head>
+  <meta charset="utf-8">
+  <title>table模块快速使用</title>
+  <link rel="stylesheet" href="/layuiadmin/layui/css/layui.css" media="all">
+</head>
+<body>
+
+<table id="demo" lay-filter="test">
+<!--  <tr th:each="temp:${forms}">-->
+<!--    <td th:value="${temp.getFid()}"></td>-->
+<!--    <td th:value="${temp.getDestin()}"></td>-->
+<!--    <td th:value="${temp.getOrigin()}"></td>-->
+<!--    <td th:value="${temp.getTime()}"></td>-->
+<!--    <td th:value="${temp.getAuthorid()}"></td>-->
+<!--    <td th:value="${temp.getAccepterid()}"></td>-->
+<!--    <td th:value="${temp.getCreatetime()}"></td>-->
+
+<!--  </tr>-->
+</table>
+<script src="js/jquery-3.5.1.min.js"></script>
+<script src="/layuiadmin/layui/layui.js"></script>
+<script>
+  layui.use('table', function(){
+    var table = layui.table;
+
+    //第一个实例
+    table.render({
+      elem: '#demo'
+      ,height: 312
+      ,url: '/userform' //数据接口
+      ,page: true //开启分页
+      ,cols: [
+              [ //表头,这个双括号一定要隔开,不然会被Thymeleaf误判,浪费我一个下午排错
+        {field: 'fid', title: 'ID', width:80, sort: true, fixed: 'left'}
+        ,{field: 'destin', title: '目的地', width:120, sort: true}
+        ,{field: 'origin', title: '出发地', width:120, sort: true}
+        ,{field: 'time', title: '出发时间', width:180, sort: true}
+        ,{templet: '<div>{{createrFormat(d.authorid)}}</div>', title: '发起人', width: 120, sort: true}
+        ,{templet: '<div>{{createrFormat(d.accepterid)}}</div>', title: '接单人', width: 120, sort: true}
+        ,{field: 'createtime', title: '创建时间', width: 180, sort: true}
+        ,{fixed: 'right', width:150, align:'center', toolbar: '#barDemo'} //这里的toolbar值是模板元素的选择器
+      ]
+      ]
+      ,parseData: function(res) { //res 即为原始返回的数据
+        console.log(res);
+        return {
+          "code": 0, //解析接口状态
+          "msg": "", //解析提示文本
+          "count": "", //解析数据长度
+          "data": res//解析数据列表
+        };
+      }
+    });
+
+
+
+  table.on('tool(test)', function(obj){ //注：tool 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
+    var data = obj.data; //获得当前行数据
+    var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+    var tr = obj.tr; //获得当前行 tr 的 DOM 对象（如果有的话）
+
+    if(layEvent === 'del'){ //删除
+      layer.confirm('真的删除行么', function(index){
+        obj.del(); //删除对应行（tr）的DOM结构，并更新缓存
+        layer.close(index);
+        //向服务端发送删除指令
+        $.post("deleteform",{fid:data.fid},function (data) {
+          if(data=="success")
+            layer.msg("删除成功");
+        },"text");
+      });
+    }
+  });
+  });
+</script>
+<script type="text/html" id="barDemo">
+  <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+
+  <!-- 这里同样支持 laytpl 语法，如： -->
+  {{#  if(d.auth > 2){ }}
+  <a class="layui-btn layui-btn-xs" lay-event="check">审核</a>
+  {{#  } }}
+</script>
+<script>
+
+</script>
+<script>
+  function createrFormat(o) {
+    if (o==null)
+      return null;
+    return o.username;
+  }
+</script>
+</body>
+</html>

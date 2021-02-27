@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xf.mapper.ShareMapper">
+    <select id="Findall" resultMap="FormInfo">
+        select * from form,account where authorid=username and accepterid is null
+    </select>
+    <resultMap id="FormInfo" type="Form">
+        <result property="destin" column="destin"/>
+        <result property="origin" column="origin"/>
+        <result property="time" column="time"/>
+        <result property="fid" column="fid"/>
+        <association property="authorid" javaType="Account">
+            <result property="gender" column="gender"/>
+            <result property="phone" column="phone"/>
+        </association>
+    </resultMap>
+
+    <update id="AcceptForm" >
+        update form set accepterid=#{username} where fid=#{fid}
+    </update>
+
+
+    <insert id="AddShareForm" parameterType="String">
+        insert into form (destin, origin, time, authorid, accepterid, createtime)
+         values (#{destin},#{origin},#{datetime},#{username},null,NOW())
+    </insert>
+
+    <select id="FindUserForm" parameterType="String" resultMap="UserFormInfo">
+        select * from form,account where authorid=username and authorid=#{username}
+                                        or accepterid=username and accepterid=#{username}
+    </select>
+    <resultMap id="UserFormInfo" type="Form">
+        <result property="destin" column="destin"/>
+        <result property="origin" column="origin"/>
+        <result property="time" column="time"/>
+        <result property="fid" column="fid"/>
+        <result property="createtime" column="createtime"/>
+        <association property="authorid" javaType="Account">
+            <result property="username" column="authorid"/>
+        </association>
+        <association property="accepterid" javaType="Account">
+            <result property="username" column="accepterid"/>
+        </association>
+    </resultMap>
+
+    <delete id="DeleteForm" parameterType="int">
+        delete from form where fid=#{fid}
+    </delete>
+
+</mapper>

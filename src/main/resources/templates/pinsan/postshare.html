@@ -1,0 +1,109 @@
+
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <title>通讯录</title>
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <link rel="stylesheet" href="layuiadmin/layui/css/layui.css" media="all">
+  <link rel="stylesheet" href="layuiadmin/style/admin.css" media="all">
+  <link rel="stylesheet" href="layuiadmin/style/template.css" media="all">
+</head>
+<body>
+
+
+<div class="layui-fluid layadmin-maillist-fluid">
+  <div class="layui-row layui-col-space15">
+<!--  标签开始  -->
+    <form class="layui-form" action="">
+      <div class="layui-form-item">
+        <label class="layui-form-label">出发地</label>
+        <div class="layui-input-block">
+          <input type="text" name="origin" id="origin" required  lay-verify="required" placeholder="请输入标题" autocomplete="off" class="layui-input">
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <label class="layui-form-label">目的地</label>
+        <div class="layui-input-block">
+          <input type="text" name="destin" id="destin" required  lay-verify="required" placeholder="请输入标题" autocomplete="off" class="layui-input">
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <label class="layui-form-label">时间</label>
+        <div class="layui-input-block">
+          <input type="text" class="layui-input" id="datetime">
+        </div>
+      </div>
+
+      <div class="layui-form-item">
+        <div class="layui-input-block">
+          <button class="layui-btn" lay-submit lay-filter="formSubmit">立即提交</button>
+          <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+      </div>
+    </form>
+
+<!--  标签结束  -->
+  </div>
+</div>
+<script src="js/jquery-3.5.1.min.js"></script>
+<script src="/layuiadmin/layui/layui.js"></script>
+<script>
+  //Demo
+  layui.use('form', function(){
+    var form = layui.form;
+
+
+    //监听提交
+    form.on('submit(formSubmit)', function(data){
+      var origin=$("#origin").val();
+      var destin = $("#destin").val();
+      var datetime = $("#datetime").val();
+
+      $.post("postshare",{origin:origin,destin:destin,datetime:datetime},function (data) {
+        if (data=="success"){
+          layer.msg("发布成功",function () {
+            location.href="/share";
+          })
+
+
+        }else {
+          layer.msg("发生错误",function () {
+            location.href="/topostshare";
+          })
+
+        }
+      },"text");
+
+      return false;
+    });
+  });
+</script>
+
+<!--日期选择组件-->
+<script>
+  layui.use('laydate', function(){
+    var laydate = layui.laydate;
+
+    //执行一个laydate实例
+    laydate.render({
+      elem: '#datetime' //指定元素
+      ,type: 'datetime'
+    });
+  });
+</script>
+
+<!---->
+
+  <script>
+  layui.config({
+    base: 'layuiadmin/' //静态资源所在路径
+  }).extend({
+    index: 'lib/index' //主入口模块
+  }).use(['index']);
+  </script>
+</body>
+</html>

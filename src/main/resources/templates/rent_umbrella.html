@@ -1,0 +1,155 @@
+
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>通讯录</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="layuiadmin/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="layuiadmin/style/admin.css" media="all">
+    <link rel="stylesheet" href="layuiadmin/style/template.css" media="all">
+</head>
+<body>
+
+
+<div class="layui-fluid layadmin-maillist-fluid">
+    <div class="layui-row layui-col-space15">
+        <!--  标签开始  -->
+        <form class="layui-form" th:if="${rentable}" action="">
+            <div class="layui-form-item">
+                <label class="layui-form-label">雨伞编号</label>
+                <div class="layui-input-block">
+                    <input type="text" name="uid" id="uid" required  lay-verify="required" placeholder="请输入编号" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit lay-filter="formSubmit">租伞</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+        </form>
+        <div th:if="${not rentable}" class="layui-col-md4 layui-col-sm6">
+            <div class="layadmin-contact-box" >
+                <div class="layui-col-md8 layadmin-padding-left20 layui-col-sm6">
+                    <a href="javascript:;">
+                        <strong class="layui-icon layui-icon-location">雨伞编号:</strong>
+                        <strong th:text="${rentForm.getUmb_id()}"></strong>
+                    </a>
+                    <br>
+                    <a href="javascript:;">
+                        <strong class="layui-icon layui-icon-time">借出时间:</strong>
+                        <strong th:text="${rentForm.getCreatetime()}"></strong>
+                    </a>
+                    <br>
+                    <div class="layadmin-address">
+                        <a href="javascript:;">
+                            <strong>借出地点:</strong>
+                            <strong th:text="${rentForm.getRent_loc()}"></strong>
+                        </a>
+                        <br>
+
+                        <button class="layui-btn" onclick="Return_Umb()">归还</button>
+<!--                        弹出层html-->
+                        <div class="layui-row" id="popSearchRoleTest" style="display:none;">
+                            <div class="layui-col-md11">
+                                <form class="layui-form" lay-filter="formTestFilter2121" >
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">归还地点</label>
+                                        <div class="layui-input-block">
+                                            <select name="store" lay-verify="required">
+                                                <option th:each="temp:${stores}" th:value="${temp.getId()}" th:text="${temp.getName()}"></option>
+
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="layui-form-item">
+                                        <div class="layui-input-block">
+                                            <button type="button" class="layui-btn layui-btn-normal">提交</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+<!--                        弹出层html结束-->
+<!--                        <button class="layui-btn layui-btn-danger" th:if="${cur_account.getLevel()>0}"-->
+<!--                                th:onclick="|javascript:del('${temp.getFid()}')|">删除</button>-->
+                        <p th:text="|订单编号:${rentForm.getId()}|" id="fid"></p>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr>
+
+<!--        <label class="layui-form-label">地点查询</label>-->
+<!--        <div class="layui-input-block">-->
+<!--            <select name="store" lay-verify="required">-->
+<!--                <option th:each="" value=""></option>-->
+
+<!--            </select>-->
+<!--        </div>-->
+
+        <!--  标签结束  -->
+    </div>
+</div>
+<script src="js/jquery-3.5.1.min.js"></script>
+<script src="/layuiadmin/layui/layui.js"></script>
+<script>
+    //Demo
+    layui.use('form', function(){
+        var form = layui.form;
+
+
+        //监听提交
+        form.on('submit(formSubmit)', function(data){
+            var uid=$("#uid").val();
+
+            $.post("addrentform",{uid:uid},function (data) {
+                if (data=="success"){
+                    layer.msg("租用成功",function () {
+                        location.href="/rent_umbrella";
+                    })
+
+
+                }else {
+                    layer.msg("发生错误",function () {
+                        location.href="/rent_umbrella";
+                    })
+
+                }
+            },"text");
+
+            return false;
+        });
+    });
+</script>
+
+<!--日期选择组件-->
+<script>
+    layui.use('laydate', function(){
+        var laydate = layui.laydate;
+
+        //执行一个laydate实例
+        laydate.render({
+            elem: '#datetime' //指定元素
+            ,type: 'datetime'
+        });
+    });
+</script>
+
+<!---->
+
+<script>
+    layui.config({
+        base: 'layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index']);
+</script>
+</body>
+</html>

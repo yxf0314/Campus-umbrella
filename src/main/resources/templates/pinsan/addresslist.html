@@ -1,0 +1,110 @@
+
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <title>通讯录</title>
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <link rel="stylesheet" href="layuiadmin/layui/css/layui.css" media="all">
+  <link rel="stylesheet" href="layuiadmin/style/admin.css" media="all">
+  <link rel="stylesheet" href="layuiadmin/style/template.css" media="all">
+</head>
+<body>
+
+
+<div class="layui-fluid layadmin-maillist-fluid">
+  <div class="layui-row layui-col-space15">
+<!--  标签开始  -->
+    <div th:each="temp:${forms}" class="layui-col-md4 layui-col-sm6">
+      <div class="layadmin-contact-box" >
+        <div class="layui-col-md8 layadmin-padding-left20 layui-col-sm6">
+          <a href="javascript:;">
+            <strong class="layui-icon layui-icon-location">目的地:</strong>
+            <strong th:text="${temp.getDestin()}"></strong>
+          </a>
+          <br>
+          <a href="javascript:;">
+            <strong class="layui-icon layui-icon-time">时间:</strong>
+            <strong th:text="${temp.getTime()}"></strong>
+          </a>
+          <br>
+          <div class="layadmin-address">
+            <a href="javascript:;">
+              <strong>性别:</strong>
+              <strong th:text="${temp.authorid.getGender()}"></strong>
+            </a>
+            <br>
+            <a href="javascript:;">
+              <addr title="phone"><strong>Tel:</strong><strong th:text="${temp.authorid.getPhone()}"></strong></addr>
+            </a>
+            <br>
+            <a class="layui-btn layui-btn-warm" href="tel:13413041004">联系</a>
+            <button class="layui-btn" onclick="AcceptForm()">接单</button>
+            <button class="layui-btn layui-btn-danger" th:if="${cur_account.getLevel()>0}"
+                    th:onclick="|javascript:del('${temp.getFid()}')|">删除</button>
+            <p th:text="|订单编号:${temp.getFid()}|" id="fid"></p>
+
+          </div>
+        </div>
+        <div class="layui-col-md4 layui-col-sm6">
+          <a href="javascript:;">
+            <div class="layadmin-text-center">
+              <a href="javascript:;">
+                <strong class="layui-icon layui-icon-location">出发地:</strong>
+                <strong th:text="${temp.getOrigin()}"></strong>
+              </a>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+<!--  标签结束  -->
+  </div>
+</div>
+
+  <script src="js/jquery-3.5.1.min.js"></script>
+  <script src="/layuiadmin/layui/layui.js"></script>
+  <script>
+    function AcceptForm() {
+      var fid=$("#fid").text();
+        $.post("acceptform",{fid:fid},function (data) {
+          if (data=="success"){
+            layer.msg("接单成功",function () {
+              location.href="/share";
+            })
+
+
+          }else {
+            layer.msg("接单失败,请检查账号",function () {
+              location.href="/share";
+            })
+        }
+    },"text");
+        return false;}
+  </script>
+<script>
+  function del(fid) {
+
+    layer.confirm('确定删除该订单吗',function (index) {
+      layer.close(index);
+      //向服务端发送删除指令
+      $.post("deleteform",{fid:fid},function (data) {
+        if(data=="success")
+          layer.msg("删除成功");
+        location.href="/share"
+      },"text");
+    })
+  }
+</script>
+  <script>
+  layui.config({
+    base: 'layuiadmin/' //静态资源所在路径
+  }).extend({
+    index: 'lib/index' //主入口模块
+  }).use(['index']);
+  </script>
+</body>
+</html>
