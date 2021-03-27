@@ -15,4 +15,5 @@ public class Form {
     Account accepterid;
     String createtime;
     int fid;
+    int state;
 }

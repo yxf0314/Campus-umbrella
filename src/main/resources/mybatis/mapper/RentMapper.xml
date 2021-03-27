@@ -4,12 +4,23 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.xf.mapper.RentMapper">
     <update id="rent" parameterType="int">
-        update umbrella_info set state = '租用中' where id=#{uid}
+        update umbrella_info set state = '租用中' where id = #{uid}
     </update>
+    <update id="ReturnUmbrella">
+        update umbrella_info set state = '可租用' , location = #{location} where id=#{uid}
+    </update>
+    
     <insert id="AddRentForm">
         insert into rent_form(umb_id, username, createtime, returntime, rent_loc, return_loc)
         values (#{umb_id},#{username},NOW(),null,#{location},null)
     </insert>
+    <insert id="addUmb">
+        insert into umbrella_info(id, state, location) VALUES (#{uid},'可租用',#{location})
+    </insert>
+
+    <update id="ReturnForm">
+        update rent_form set returntime = NOW() , return_loc = #{location} where id = #{fid}
+    </update>
     <select id="FindUmbrella" resultType="Umbrella">
         select * from umbrella_info where id=#{id}
     </select>
@@ -20,4 +31,12 @@
     <select id="AllStore" resultType="Store">
         select * from store
     </select>
+    
+    <select id="FindRentFormById" resultType="RentForm">
+        select * from  rent_form where id=#{fid}
+    </select>
+
+    <update id="changecount">
+        update store set count=(count+#{num}) where name = #{location}
+    </update>
 </mapper>

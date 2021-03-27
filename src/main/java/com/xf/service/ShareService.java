@@ -11,4 +11,5 @@ public interface ShareService {
     public List<Form> FindUserForm(String username);
     public int DeleteForm(int fid);
 
+    int FinishForm(int ifid);
 }

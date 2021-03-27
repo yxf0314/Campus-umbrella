@@ -12,7 +12,9 @@ public interface ShareMapper {
     public List<Form> Findall();
     public int AddShareForm(String username,String origin,String destin,String datetime);
     public int AcceptForm(String username,int fid);
-
+    Form FindById(int fid);
     List<Form> FindUserForm(String username);
     int DeleteForm(int fid);
+
+    int FinishForm(int ifid);
 }

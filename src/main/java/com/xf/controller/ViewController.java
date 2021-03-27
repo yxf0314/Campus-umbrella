@@ -1,6 +1,7 @@
 package com.xf.controller;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.xf.mapper.BoardMapper;
 import com.xf.pojo.Account;
 import com.xf.pojo.Form;
 import com.xf.pojo.RentForm;
@@ -23,6 +24,8 @@ public class ViewController {
     ShareServiceImpl ShareService;
     @Autowired
     RentServiceImpl RentService;
+    @Autowired
+    BoardMapper boardMapper;
 
     @RequestMapping({"/","/admin"})
     public String admin(Model model)
@@ -56,7 +59,7 @@ public class ViewController {
     {
         Account account = (Account) SecurityUtils.getSubject().getPrincipal();
         List<Form> forms = ShareService.FindUserForm(account.getUsername());
-
+        model.addAttribute("cur_account",account);
         model.addAttribute("forms",forms);
         return "pinsan/myform";
     }
@@ -68,20 +71,28 @@ public class ViewController {
         List<Store> stores = RentService.AllStore();
         model.addAttribute("stores",stores);
         Account account = (Account) SecurityUtils.getSubject().getPrincipal();
+        model.addAttribute("cur_account",account);
         //查找当前账号下是否有未归还的伞
         RentForm rentForm = RentService.FindUserRentForm(account.getUsername());
         //无未归还伞的情况则告知前端可以租用
         boolean rentable = true;
-        if(rentForm.getReturntime()==null||rentForm.getReturn_loc()==null)
+        if(rentForm!=null)
         {
-            rentable=false;
-            model.addAttribute("rentForm",rentForm);
+            if(rentForm.getReturntime()==null||rentForm.getReturn_loc()==null)
+            {
+                rentable=false;
+                model.addAttribute("rentForm",rentForm);
+            }
         }
-
-            model.addAttribute("rentable",rentable);
-
-
+        model.addAttribute("rentable",rentable);
         return "rent_umbrella";
+    }
+
+    @RequestMapping("/msgboard")
+    public String msgboard(Model model)
+    {
+        model.addAttribute("msgs",boardMapper.SelectAllMsg());
+        return "views/template/msgboard";
     }
 
 }

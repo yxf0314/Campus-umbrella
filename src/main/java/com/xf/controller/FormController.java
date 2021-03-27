@@ -54,6 +54,15 @@ public class FormController {
         return "success";
     }
 
+    @RequestMapping("/finishform")
+    @ResponseBody
+    public String FinishForm(@RequestParam("fid")String fid){
+        int ifid = Integer.parseInt(fid);
+        //Account account = (Account) SecurityUtils.getSubject().getPrincipal();
+        shareService.FinishForm(ifid);
+        return "success";
+    }
+
     @RequestMapping("/userform")//订单页面数据接口
     @ResponseBody
     public List<Form> UserForm()

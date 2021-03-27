@@ -24,5 +24,30 @@ public class RentFormController {
             return "fail";
     }
 
+    @RequestMapping("/return_umb")//归还雨伞
+    @ResponseBody
+    public String return_umb(Model model, @RequestParam("fid")int fid,
+                             @RequestParam("loc")String loc)
+    {
+        int result = RentService.return_umb(fid,loc);
+        if(result==1)
+            return "success";
+        else
+            return "fail";
+    }
 
+    @RequestMapping("/add_umb")//归还雨伞
+    @ResponseBody
+    public String add_umb(Model model, @RequestParam("adduid")String uid,
+                             @RequestParam("addstore")String loc)
+    {
+        if (uid!=null&&loc!=null)
+        {
+            int iuid=Integer.parseInt(uid);
+            int result = RentService.add_umb(iuid,loc);
+            if(result==1)
+                return "success";
+        }
+            return "fail";
+    }
 }

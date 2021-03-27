@@ -78,21 +78,52 @@
 <!--                        弹出层html结束-->
 <!--                        <button class="layui-btn layui-btn-danger" th:if="${cur_account.getLevel()>0}"-->
 <!--                                th:onclick="|javascript:del('${temp.getFid()}')|">删除</button>-->
-                        <p th:text="|订单编号:${rentForm.getId()}|" id="fid"></p>
+                        <p>订单编号:</p>
+                        <p th:text="${rentForm.getId()}" id="fid" th:value="${rentForm.getId()}"></p>
 
                     </div>
                 </div>
+
+<!--                <div class="layui-col-md8 layadmin-padding-left20 layui-col-sm6">-->
+<!--                    <a href="javascript:;">-->
+<!--                        <strong class="layui-icon layui-icon-location">租借时长:</strong>-->
+<!--                        <strong th:text=""></strong>-->
+<!--                    </a>-->
+<!--                </div>-->
+
             </div>
         </div>
         <hr>
+        <div th:if="${cur_account.getLevel()>0}">
+            <label>管理员功能:添加雨伞</label>
+            <form>
+                <div class="layui-form-item">
+                <input id="adduid" type="text" required  lay-verify="required"
+                       placeholder="请输入编号" autocomplete="off" class="layui-input">
+                <div class="layui-input-block">
+                    <select class="layui-form-select" name="store" id="addstore" lay-verify="required">
+                        <option disabled>--请选择--</option>
+                        <option th:each="temp:${stores}" th:value="${temp.getName()}" th:text="${temp.getName()}"></option>
+                    </select>
+                </div>
 
-<!--        <label class="layui-form-label">地点查询</label>-->
-<!--        <div class="layui-input-block">-->
-<!--            <select name="store" lay-verify="required">-->
-<!--                <option th:each="" value=""></option>-->
+                </div>
+            </form>
+            <button class="layui-btn" onclick="Add_Umb()">添加</button>
 
-<!--            </select>-->
-<!--        </div>-->
+        </div>
+
+        <form class="layui-form" id="loc_select" style="display: none">
+            <label class="layui-form-label">地点查询</label>
+            <div class="layui-input-block">
+                <select name="store" id="store" lay-verify="required">
+                    <option disabled>--请选择--</option>
+                    <option th:each="temp:${stores}" th:value="${temp.getName()}" th:text="${temp.getName()}"></option>
+
+                </select>
+            </div>
+        </form>
+
 
         <!--  标签结束  -->
     </div>
@@ -103,18 +134,14 @@
     //Demo
     layui.use('form', function(){
         var form = layui.form;
-
-
         //监听提交
         form.on('submit(formSubmit)', function(data){
             var uid=$("#uid").val();
-
             $.post("addrentform",{uid:uid},function (data) {
                 if (data=="success"){
                     layer.msg("租用成功",function () {
                         location.href="/rent_umbrella";
                     })
-
 
                 }else {
                     layer.msg("发生错误",function () {
@@ -123,10 +150,54 @@
 
                 }
             },"text");
-
             return false;
         });
     });
+
+    function Return_Umb() {
+        layui.use(['layer','form'],function () {
+        var layer = layui.layer;
+            layer.open({
+                type: 1,
+                content: $('#loc_select'),
+                btn: ['提交','关闭'],
+                yes: function(index, layero){
+                    var fid=$("#fid").text();
+                    var loc=$("#store").val();
+                    $.post("return_umb",{fid:fid,loc:loc},function (data) {
+                        if (data=="success"){
+                            layer.msg("归还成功",function () {
+                                location.href="/rent_umbrella";
+                            })
+                        }else {
+                            layer.msg("归还失败",function () {
+                                location.href="/rent_umbrella";
+                            })
+                        }
+                    },"text");
+                layer.close(index);
+                }
+            })
+        })
+    }
+    function Add_Umb() {
+        var adduid = $("#adduid").val();
+        var addstore = $("#addstore").val();
+        $.post("add_umb",{adduid:adduid,addstore:addstore},function (data) {
+            if (data=="success"){
+                layer.msg("添加成功",function () {
+                    location.href="/rent_umbrella";
+                })
+            }else {
+                layer.msg("添加失败",function () {
+                    location.href="/rent_umbrella";
+                })
+            }
+        },"text");
+
+    }
+
+
 </script>
 
 <!--日期选择组件-->

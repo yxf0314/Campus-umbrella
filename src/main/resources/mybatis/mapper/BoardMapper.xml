@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xf.mapper.BoardMapper">
+    <insert id="AddMsg">
+        insert into board (username, text, time) VALUES (#{username},#{text},now())
+    </insert>
+    <select id="SelectAllMsg" resultType="Board">
+        select *
+        from board;
+    </select>
+</mapper>

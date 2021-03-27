@@ -7,13 +7,9 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Account {
+public class Board {
     String username;
-    String password;
-    String name;
-    String gender;
-    String phone;
-    int level;
-    int credit;
-    int state;
+    String title;
+    String text;
+    String time;
 }

@@ -17,6 +17,9 @@
         </association>
     </resultMap>
 
+    <select id="FindById" resultType="Form">
+        select * from form where fid=#{fid}
+    </select>
     <update id="AcceptForm" >
         update form set accepterid=#{username} where fid=#{fid}
     </update>
@@ -48,5 +51,7 @@
     <delete id="DeleteForm" parameterType="int">
         delete from form where fid=#{fid}
     </delete>
-
+    <update id="FinishForm">
+        update form set state=1 where fid=#{ifid}
+    </update>
 </mapper>

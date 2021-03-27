@@ -135,37 +135,13 @@
                 <dd data-name="forum">
                   <a href="javascript:;">社区</a>
                   <dl class="layui-nav-child">
-                    <dd data-name="list"><a lay-href="views/app/forum/list.html">帖子列表</a></dd>
-                    <dd data-name="replys"><a lay-href="views/app/forum/replys.html">回帖列表</a></dd>
+                    <dd data-name="list"><a th:lay-href="@{/msgboard}">留言板</a></dd>
                   </dl>
                 </dd>
-                <dd>
-                  <a lay-href="views/app/message/index.html">消息中心</a>
-                </dd>
-                <dd data-name="workorder">
-                  <a lay-href="views/app/workorder/list.html">工单系统</a>
-                </dd>
+
               </dl>
             </li>
-            <li data-name="senior" class="layui-nav-item">
-              <a href="javascript:;" lay-tips="高级" lay-direction="2">
-                <i class="layui-icon layui-icon-senior"></i>
-                <cite>高级</cite>
-              </a>
-              <dl class="layui-nav-child">
-                <dd>
-                  <a layadmin-event="im">LayIM 通讯系统</a>  
-                </dd>
-                <dd data-name="echarts">
-                  <a href="javascript:;">Echarts集成</a>
-                  <dl class="layui-nav-child">
-                    <dd><a lay-href="views/senior/echarts/line.html">折线图</a></dd>
-                    <dd><a lay-href="views/senior/echarts/bar.html">柱状图</a></dd>
-                    <dd><a lay-href="views/senior/echarts/map.html">地图</a></dd>
-                  </dl>
-                </dd>
-              </dl>
-            </li>
+
             <li data-name="user" class="layui-nav-item">
               <a href="javascript:;" lay-tips="用户" lay-direction="2">
                 <i class="layui-icon layui-icon-user"></i>

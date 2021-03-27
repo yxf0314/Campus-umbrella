@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html >
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="utf-8">
   <title>table模块快速使用</title>
@@ -72,16 +72,28 @@
         },"text");
       });
     }
+    else if(layEvent=== 'fin'){
+      layer.confirm('确认完成订单了吗', function(index){
+        obj.del(); //删除对应行（tr）的DOM结构，并更新缓存
+        layer.close(index);
+        //向服务端发送删除指令
+        $.post("finishform",{fid:data.fid},function (data) {
+          if(data=="success")
+            layer.msg("订单完成");
+        },"text");
+      });
+    }
   });
   });
 </script>
 <script type="text/html" id="barDemo">
+<!-- layui的模板引擎 {{# 括号内为js代码,注意不要看花眼 }} -->
+  {{#  if(createrFormat(d.accepterid) == null){  }}
   <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+  {{#  }else{  }}
+  <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="fin">完成</a>
+  {{#  }  }}
 
-  <!-- 这里同样支持 laytpl 语法，如： -->
-  {{#  if(d.auth > 2){ }}
-  <a class="layui-btn layui-btn-xs" lay-event="check">审核</a>
-  {{#  } }}
 </script>
 <script>
 

@@ -9,4 +9,5 @@ import org.springframework.stereotype.Repository;
 public interface AccountMapper {
     public Account Logincheck(String username);
 
+    void ChangeCredit(Account accepterid, int i);
 }
